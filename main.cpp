@@ -2,14 +2,7 @@
 #include <iostream>
 #include <memory>
 
-
-mg_serve_http_opts HttpServer::s_server_option;
-std::string HttpServer::s_web_dir = "./wwwroot";
-std::unordered_map<std::string, ReqHandler> HttpServer::s_handler_map;
-std::unordered_set<mg_connection *> HttpServer::s_websocket_session_set;
-
-bool handle_fun1(std::string url, std::string body, mg_connection *c,
-				 OnRspCallback rsp_callback)
+bool handle_fun1(std::string url, std::string body, mg_connection *c, OnRspCallback rsp_callback)
 {
 	// do sth
 	std::cout << "handle fun1" << std::endl;
@@ -21,8 +14,7 @@ bool handle_fun1(std::string url, std::string body, mg_connection *c,
 	return true;
 }
 
-bool handle_fun2(std::string url, std::string body, mg_connection *c,
-				 OnRspCallback rsp_callback)
+bool handle_fun2(std::string url, std::string body, mg_connection *c, OnRspCallback rsp_callback)
 {
 	// do sth
 	std::cout << "handle fun2" << std::endl;
@@ -37,12 +29,12 @@ bool handle_fun2(std::string url, std::string body, mg_connection *c,
 int main(int argc, char *argv[])
 {
 	std::string port = "8080";
-	auto http_server = std::shared_ptr<HttpServer>(new HttpServer);
-	http_server->Init(port);
+	auto httpserv = std::shared_ptr<HttpServer>(new HttpServer);
+	httpserv->Init(port);
 	// add handler
-	http_server->AddHandler("/api/fun1", handle_fun1);
-	http_server->AddHandler("/api/fun2", handle_fun2);
-	http_server->Start();
+	httpserv->AddHandler("/api/fun1", handle_fun1);
+	httpserv->AddHandler("/api/fun2", handle_fun2);
+	httpserv->Start();
 
 	return 0;
 }

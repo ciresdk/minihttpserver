@@ -1,11 +1,16 @@
 #include <utility>
 #include "httpserver.h"
 
-void HttpServer::Init(const std::string &port)
+void HttpServer::Init(const std::string &port, const std::string &rootdir)
 {
 	m_port = port;
-	s_server_option.enable_directory_listing = "yes";
-	s_server_option.document_root = s_web_dir.c_str();
+
+	mg_serve_http_opts opt;
+	
+	opt.enable_directory_listing = "yes";
+	opt.document_root = rootdir.c_str();
+
+	mServerOptions = opt;
 
 	// TODO：其他http设置
 }
@@ -101,7 +106,7 @@ void HttpServer::HandleHttpEvent(mg_connection *connection, http_message *http_r
 
 	// 其他请求
 	if (route_check(http_req, "/")) // index page
-		mg_serve_http(connection, http_req, s_server_option);
+		mg_serve_http(connection, http_req, mServerOptions);
 	else if (route_check(http_req, "/api/hello"))
 	{
 		// 直接回传
